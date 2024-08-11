@@ -1,0 +1,924 @@
+[
+    {
+        "identifyComponents": {
+            "system": "You are an expert software architect specialized in identifying system components based on requirements.",
+            "user": "Based on the following requirements, identify the primary and secondary components of our application. Primary components are major modules or services, while secondary components are submodules or helper components.\n\nRequirements:\n{requirements}",
+            "requestFormat": {
+                "requirements": "object"
+            },
+            "responseFormat": {
+                "components": [
+                    {
+                        "name": "string",
+                        "type": "string",
+                        "description": "string",
+                        "children": [
+                            {
+                                "name": "string",
+                                "type": "string",
+                                "description": "string"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "mapComponentsToFiles": {
+            "system": "You are an expert software architect specialized in designing file structures for software projects.",
+            "user": "Given the following component structure, create a list of files that will implement these components. Each file should be associated with a component and list its dependencies.\n\nComponents:\n{components}",
+            "requestFormat": {
+                "components": "array"
+            },
+            "responseFormat": {
+                "files": [
+                    {
+                        "name": "string",
+                        "path": "string",
+                        "component": "string",
+                        "dependencies": [
+                            "string"
+                        ]
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "createProjectFiles": {
+            "system": "You are an expert software developer specialized in creating initial file structures for software projects.",
+            "user": "For each file in the following list, generate an initial file content. This should include basic structure, import statements, and placeholder comments for main functionalities.\n\nFiles:\n{files}",
+            "requestFormat": {
+                "files": "array"
+            },
+            "responseFormat": {
+                "fileContents": {
+                    "key": "string"
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1500
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generatePublicInterfaces": {
+            "system": "You are an expert software developer specialized in designing public interfaces for software components.",
+            "user": "For each file in the following list, generate the public interfaces (e.g., class definitions, function signatures) based on the component it's associated with.\n\nFiles:\n{files}\n\nComponents:\n{components}",
+            "requestFormat": {
+                "files": "array",
+                "components": "array"
+            },
+            "responseFormat": {
+                "interfaces": {
+                    "key": "string"
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1500
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "sortFilesByDependency": {
+            "system": "You are an expert software architect specialized in analyzing and organizing project dependencies.",
+            "user": "Given the following list of files and their dependencies, sort them in order of least dependent to most dependent.\n\nFiles:\n{files}",
+            "requestFormat": {
+                "files": "array"
+            },
+            "responseFormat": {
+                "sortedFiles": [
+                    "string"
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "implementFile": {
+            "system": "You are an expert software developer specialized in implementing software components based on interfaces and specifications.",
+            "user": "Implement the content of the following file, taking into account its public interface and the components it's associated with. Ensure all necessary functions are implemented and properly documented.\n\nFile to implement: {file}\nPublic interface:\n{interface}\n\nAssociated component:\n{component}",
+            "requestFormat": {
+                "file": "string",
+                "interface": "string",
+                "component": "object"
+            },
+            "responseFormat": {
+                "implementedContent": "string"
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 2000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "orchestrateApplicationGeneration": {
+            "system": "You are an expert software architect and project manager, capable of orchestrating the entire process of generating a complex software application from requirements to deployment.",
+            "user": "Your task is to orchestrate the process of generating a complete software application based on initial requirements. Follow the process flow described in the Mermaid chart below, using the specified prompts and tools for each step. Ensure that the output of each step is properly stored and used as input for subsequent steps.\n\n```mermaid\ngraph TD\n    A[Start] --> B[Identify Components]\n    B --> C[Map Components to Files]\n    C --> D[Create Project Files]\n    D --> E[Generate Public Interfaces]\n    E --> F[Sort Files by Dependency]\n    F --> G[Implement Files]\n    G --> H[Generate Unit Tests]\n    H --> I[Implement Integration Tests]\n    I --> J[Generate Config Files]\n    J --> K[Create Build/Deploy Scripts]\n    K --> L[Generate Project Documentation]\n    L --> M[End]\n```\n\nProcess Steps:\n\n1. Identify Components\n   - Use the 'identifyComponents' prompt\n   - Input: Initial requirements\n   - Output: Store in state.components\n\n2. Map Components to Files\n   - Use the 'mapComponentsToFiles' prompt\n   - Input: state.components\n   - Output: Store in state.files\n\n3. Create Project Files\n   - Use the 'createProjectFiles' prompt\n   - Input: state.files\n   - Output: Store in state.fileContents\n\n4. Generate Public Interfaces\n   - Use the 'generatePublicInterfaces' prompt\n   - Input: state.files, state.components\n   - Output: Store in state.interfaces\n\n5. Sort Files by Dependency\n   - Use the 'sortFilesByDependency' prompt\n   - Input: state.files\n   - Output: Store in state.sortedFiles\n\n6. Implement Files\n   - For each file in state.sortedFiles:\n     - Use the 'implementFile' prompt\n     - Input: Current file, corresponding interface from state.interfaces, corresponding component from state.components\n     - Output: Update state.fileContents with implemented content\n\n7. Generate Unit Tests\n   - For each file in state.fileContents:\n     - Use the 'generateUnitTests' prompt\n     - Input: File path and content\n     - Output: Store in state.testFiles\n\n8. Implement Integration Tests\n   - Use the 'implementIntegrationTests' prompt\n   - Input: state.components\n   - Output: Store in state.integrationTests\n\n9. Generate Config Files\n   - Use the 'generateConfigFiles' prompt\n   - Input: state.components, initial requirements\n   - Output: Store in state.configFiles\n\n10. Create Build/Deploy Scripts\n    - Use the 'createBuildDeployScripts' prompt\n    - Input: state.files, state.components\n    - Output: Store in state.buildScripts\n\n11. Generate Project Documentation\n    - Use the 'generateProjectDocumentation' prompt\n    - Input: state.fileContents, state.components, initial requirements\n    - Output: Store in state.documentation\n\nEnsure that each step is completed before moving to the next, and that all necessary information is passed between steps. The final output should be a complete, well-structured software application with all necessary components, tests, configuration, build scripts, and documentation.\n\nProvide a summary of the actions taken and the final state of the application after completing all steps.",
+            "requestFormat": {
+                "initialRequirements": "object"
+            },
+            "responseFormat": {
+                "summary": "string",
+                "finalState": {
+                    "components": "array",
+                    "files": "array",
+                    "fileContents": "object",
+                    "interfaces": "object",
+                    "sortedFiles": "array",
+                    "testFiles": "object",
+                    "integrationTests": "array",
+                    "configFiles": "object",
+                    "buildScripts": "object",
+                    "documentation": "object"
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 3000
+            },
+            "runContext": [
+                "server"
+            ]
+        }
+    },
+    {
+        "generateUnitTests2": {
+            "system": "You are an expert software tester specialized in creating comprehensive unit tests.",
+            "user": "Generate unit tests for the following file. Ensure all public methods are tested, including edge cases and error scenarios.\n\nFile to test:\n{filePath}\n\nFile content:\n{fileContent}",
+            "requestFormat": {
+                "filePath": "string",
+                "fileContent": "string"
+            },
+            "responseFormat": {
+                "testFiles": {
+                    "key": "string"
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 2000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "implementIntegrationTests": {
+            "system": "You are an expert software tester specialized in creating integration tests for complex systems.",
+            "user": "Based on the following components and their interactions, create integration tests that verify the correct functioning of the system as a whole.\n\nComponents:\n{components}",
+            "requestFormat": {
+                "components": "array"
+            },
+            "responseFormat": {
+                "integrationTests": [
+                    {
+                        "name": "string",
+                        "description": "string",
+                        "steps": [
+                            "string"
+                        ],
+                        "expectedOutcome": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 2000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateConfigFiles": {
+            "system": "You are an expert DevOps engineer specialized in creating configuration files for software applications.",
+            "user": "Based on the following components and requirements, generate the necessary configuration files for the application.\n\nComponents:\n{components}\n\nRequirements:\n{requirements}",
+            "requestFormat": {
+                "components": "array",
+                "requirements": "object"
+            },
+            "responseFormat": {
+                "configFiles": {
+                    "key": "object"
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1500
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "createBuildDeployScripts": {
+            "system": "You are an expert DevOps engineer specialized in creating build and deployment scripts for software applications.",
+            "user": "Generate build and deployment scripts for the application based on the following file structure and components.\n\nFiles:\n{files}\n\nComponents:\n{components}",
+            "requestFormat": {
+                "files": "array",
+                "components": "array"
+            },
+            "responseFormat": {
+                "buildScripts": {
+                    "key": "string"
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 2000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateProjectDocumentation": {
+            "system": "You are an expert technical writer specialized in creating comprehensive software documentation.",
+            "user": "Create comprehensive project documentation including a README file, API documentation, and architecture overview based on the following information.\n\nFile contents:\n{fileContents}\n\nComponents:\n{components}\n\nRequirements:\n{requirements}",
+            "requestFormat": {
+                "fileContents": "object",
+                "components": "array",
+                "requirements": "object"
+            },
+            "responseFormat": {
+                "documentation": {
+                    "README.md": "string",
+                    "API.md": "string",
+                    "ARCHITECTURE.md": "string"
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 3000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "runStructuredPrompt": {
+            "system": "{system}",
+            "user": "{user}",
+            "requestFormat": "{requestFormat}",
+            "responseFormat": "{responseFormat}",
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "runStructuredPrompt": {
+            "system": "{system}",
+            "user": "{user}",
+            "requestFormat": "{requestFormat}",
+            "responseFormat": "{responseFormat}",
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_validateFunctionParams": {
+            "system": "Given the following source code, perform a thorough validation of input parameters and return statement. Ensure that each function is getting passed the expected number of parameters when being called as well as returning the expected data; verify this EXPLICITLY for EACH of the functions in the code",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "input": "string",
+                "validation": "string",
+                "correct": "boolean || string"
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_validateVariableUsage": {
+            "system": "Given the following source code, perform a thorough validation of variable usage. Ensure that each variable is being used correctly and consistently throughout the code",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "variables": [
+                    {
+                        "name": "string",
+                        "usage": "string",
+                        "correct": "boolean || string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_validateFunctionReturns": {
+            "system": "Given the following source code, perform a thorough validation of return statements. Ensure that each function is returning the expected data type and value",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "function": "string",
+                "validation": "string",
+                "correct": "boolean || string"
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_validateFunctionCalls": {
+            "system": "Given the following source code, perform a thorough validation of function calls. Ensure that each function is being called with the correct number of parameters and that the return value is being handled appropriately",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "function": "string",
+                "validation": "string",
+                "correct": "boolean || string"
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_validateVariableScope": {}
+    },
+    {
+        "dev_analyseUsagePatterns": {
+            "system": "Given the following source code, perform a thorough analysis of the usage patterns of global variables. Identify all global variables and determine if they are being used correctly or if they can be replaced with local variables or function parameters",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "variables": [
+                    {
+                        "name": "string",
+                        "usage": "string",
+                        "recommendation": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_analysePerformance": {
+            "system": "Given the following source code, perform a thorough analysis of potential performance bottlenecks. Identify any potential performance issues and suggest improvements to optimize the code",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_analyseSecurity": {
+            "system": "Given the following source code, perform a thorough analysis of potential security vulnerabilities. Identify any potential security issues and suggest improvements to make the code more secure",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_analyseCodeStructure": {
+            "system": "Given the following source code, perform a thorough analysis of the code structure. Identify any potential issues related to code organization, readability, and maintainability",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_analyseCodeComments": {
+            "system": "Given the following source code, perform a thorough analysis of the code comments. Identify any missing or incorrect comments and suggest improvements to make the code more understandable",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "dev_validateAsyncOperations": {
+            "system": "Given the following source code, perform a thorough validation of asynchronous operations. Ensure that all asynchronous operations are handled correctly with appropriate error catching",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "operations": [
+                    {
+                        "name": "string",
+                        "validation": "string",
+                        "correct": "boolean || string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyseErrorHandling": {
+            "system": "Given the following source code, perform a thorough analysis of error handling. Identify any potential error handling issues and suggest improvements to make the code more robust",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyseCodeDuplication": {
+            "system": "Given the following source code, perform a thorough analysis of code duplication. Identify any duplicated code segments and suggest improvements to reduce duplication and improve code maintainability",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyseCodeComplexity": {
+            "system": "Given the following source code, perform a thorough analysis of code complexity. Identify any overly complex code segments and suggest improvements to simplify the code and improve readability",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyseCodeConsistency": {
+            "system": "Given the following source code, perform a thorough analysis of code consistency. Identify any inconsistencies in coding style, naming conventions, or formatting and suggest improvements to maintain a consistent codebase",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_validateDatabaseQueries": {
+            "system": "Given the following source code, perform a thorough validation of database queries. Ensure that all queries are properly constructed and parameterized to prevent SQL injection vulnerabilities",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "queries": [
+                    {
+                        "query": "string",
+                        "validation": "string",
+                        "correct": "boolean || string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_validateInputSanitization": {
+            "system": "Given the following source code, perform a thorough validation of input sanitization. Ensure that all user inputs are properly sanitized to prevent XSS and other security vulnerabilities",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "inputs": [
+                    {
+                        "input": "string",
+                        "validation": "string",
+                        "correct": "boolean || string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyseCodePerformance": {
+            "system": "Given the following source code, perform a thorough analysis of code performance. Identify any potential performance bottlenecks and suggest improvements to optimize the code execution",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyseCodeSecurity": {
+            "system": "Given the following source code, perform a thorough analysis of code security. Identify any potential security vulnerabilities and suggest improvements to make the code more secure",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyseCodeQuality": {
+            "system": "Given the following source code, perform a thorough analysis of code quality. Identify any potential issues related to code readability, maintainability, and efficiency",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "issues": [
+                    {
+                        "description": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeConditionalStatements": {
+            "system": "Review all conditional statements and switch cases in the given source code for completeness. Check for missing else clauses or default cases.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "conditionals": [
+                    {
+                        "location": "string",
+                        "completeness": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeClassHierarchies": {
+            "system": "Examine all class inheritance hierarchies and interface implementations in the provided source code. Evaluate for proper design and potential simplification.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "hierarchies": [
+                    {
+                        "description": "string",
+                        "designEvaluation": "string",
+                        "simplificationSuggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeCaching": {
+            "system": "Identify all areas where caching is used in the given source code. Verify the caching strategy is appropriate and efficient.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "cachingAreas": [
+                    {
+                        "location": "string",
+                        "strategy": "string",
+                        "efficiencyAssessment": "string",
+                        "improvement": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeConcurrency": {
+            "system": "Review all areas where concurrency is used (threads, async operations) in the provided source code. Check for proper synchronization and deadlock prevention.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "concurrentOperations": [
+                    {
+                        "operation": "string",
+                        "synchronizationStatus": "string",
+                        "deadlockRisk": "string",
+                        "recommendation": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeDynamicCodeExecution": {
+            "system": "Analyze all areas where dynamic code execution occurs (eval, dynamic imports) in the given source code. Verify their security implications.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "dynamicExecutions": [
+                    {
+                        "location": "string",
+                        "securityImplications": "string",
+                        "mitigationStrategy": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeRegularExpressions": {
+            "system": "Examine all uses of regular expressions in the provided source code for correctness and potential performance issues with complex patterns or large inputs.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "regexUsages": [
+                    {
+                        "regex": "string",
+                        "correctness": "string",
+                        "performanceIssues": "string",
+                        "optimizationSuggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeDataSerialization": {
+            "system": "Review all areas where data serialization/deserialization occurs in the given source code. Verify proper handling of malformed data.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "serializationAreas": [
+                    {
+                        "location": "string",
+                        "dataHandling": "string",
+                        "vulnerabilities": "string",
+                        "improvement": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeConfigurationSettings": {
+            "system": "Identify all configuration settings in the provided source code and analyze how they're loaded and used throughout the application.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "configSettings": [
+                    {
+                        "setting": "string",
+                        "loadingMechanism": "string",
+                        "usage": "string",
+                        "recommendation": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeDataTransformations": {
+            "system": "Examine all areas where data transformations occur in the given source code. Verify their correctness and efficiency.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "transformations": [
+                    {
+                        "location": "string",
+                        "description": "string",
+                        "correctness": "string",
+                        "efficiency": "string",
+                        "optimizationSuggestion": "string"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "dev_analyzeEventListeners": {
+            "system": "Review all event listeners and callback functions in the provided source code to ensure they're properly removed when no longer needed to prevent memory leaks.",
+            "user": "{code}",
+            "requestFormat": {
+                "code": "string"
+            },
+            "responseFormat": {
+                "eventListeners": [
+                    {
+                        "listener": "string",
+                        "removalStatus": "string",
+                        "potentialIssues": "string",
+                        "recommendation": "string"
+                    }
+                ]
+            }
+        }
+    }
+]
+
+

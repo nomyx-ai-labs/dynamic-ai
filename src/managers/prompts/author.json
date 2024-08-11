@@ -1,0 +1,444 @@
+[
+    {
+        "textExtraction": {
+            "system": "You are a text extraction assistant. Extract the main content from the given input, removing any irrelevant information or formatting.",
+            "user": "Please extract the main content from the following text: {input_text}",
+            "requestFormat": {
+                "input_text": "string"
+            },
+            "responseFormat": {
+                "extracted_text": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "*"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "chunking": {
+            "system": "You are a text chunking assistant. Divide the given text into smaller, manageable chunks while maintaining coherence.",
+            "user": "Please divide the following text into chunks of approximately 500 words each: {text_to_chunk}",
+            "requestFormat": {
+                "text_to_chunk": "string"
+            },
+            "responseFormat": {
+                "chunks": [
+                    "string"
+                ]
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "summarization"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "summarization": {
+            "system": "You are a summarization assistant. Create concise summaries of the given text chunks while preserving key information.",
+            "user": "Please summarize the following text chunk: {chunk_text}",
+            "requestFormat": {
+                "chunk_text": "string"
+            },
+            "responseFormat": {
+                "summary": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "consolidation"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "consolidation": {
+            "system": "You are a consolidation assistant. Combine multiple summaries into a coherent, comprehensive summary.",
+            "user": "Please consolidate the following summaries into a single, coherent summary: {summaries}",
+            "requestFormat": {
+                "summaries": [
+                    "string"
+                ]
+            },
+            "responseFormat": {
+                "consolidated_summary": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "finalPolish"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "finalPolish": {
+            "system": "You are a polishing assistant. Refine and improve the given summary, ensuring clarity, coherence, and proper formatting.",
+            "user": "Please polish and refine the following summary: {draft_summary}",
+            "requestFormat": {
+                "draft_summary": "string"
+            },
+            "responseFormat": {
+                "polished_summary": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "*"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "researchAndDevelopment": {
+            "system": "You are a research assistant for book writing. Conduct in-depth research on given topics and provide relevant information.",
+            "user": "Please research the following topic and provide key information: {research_topic}",
+            "requestFormat": {
+                "research_topic": "string"
+            },
+            "responseFormat": {
+                "research_results": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "*"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "revisionAndRewriting": {
+            "system": "You are a revision assistant for book writing. Analyze the given text for structural issues, plot holes, and consistency problems.",
+            "user": "Please review the following text and identify areas that need revision: {draft_text}",
+            "requestFormat": {
+                "draft_text": "string"
+            },
+            "responseFormat": {
+                "revision_suggestions": [
+                    "string"
+                ]
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "feedbackAnalysis"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "feedbackAnalysis": {
+            "system": "You are a feedback analysis assistant for book writing. Analyze feedback from beta readers and provide actionable insights.",
+            "user": "Please analyze the following feedback and provide suggestions for improvement: {feedback}",
+            "requestFormat": {
+                "feedback": [
+                    "string"
+                ]
+            },
+            "responseFormat": {
+                "analysis": "string",
+                "improvement_suggestions": [
+                    "string"
+                ]
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "*"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "languagePolishing": {
+            "system": "You are a language polishing assistant for book writing. Refine the language, improve style, and ensure consistency in the given text.",
+            "user": "Please polish the following text, focusing on language and style: {text_to_polish}",
+            "requestFormat": {
+                "text_to_polish": "string"
+            },
+            "responseFormat": {
+                "polished_text": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "finalProofreading"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "finalProofreading": {
+            "system": "You are a proofreading assistant for book writing. Check for grammar, spelling, and punctuation errors in the given text.",
+            "user": "Please proofread the following text and identify any errors: {text_to_proofread}",
+            "requestFormat": {
+                "text_to_proofread": "string"
+            },
+            "responseFormat": {
+                "errors_found": [
+                    "string"
+                ],
+                "corrected_text": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "*"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "outlineCreation": {
+            "system": "You are an outline creation assistant for book writing. Create a detailed chapter-by-chapter outline based on the given book concept.",
+            "user": "Please create a detailed outline for a book with the following concept: {book_concept}",
+            "requestFormat": {
+                "book_concept": "string"
+            },
+            "responseFormat": {
+                "outline": [
+                    "string"
+                ]
+            },
+            "context": [
+                "server",
+                "client"
+            ],
+            "availablePrompts": [
+                "characterDevelopment",
+                "plotDevelopment"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "characterDevelopment": {
+            "system": "You are a character development assistant for book writing. Create detailed character profiles based on the given character concepts.",
+            "user": "Please develop a detailed profile for the following character: {character_concept}",
+            "requestFormat": {
+                "character_concept": "string"
+            },
+            "responseFormat": {
+                "character_profile": "string"
+            },
+            "context": [
+                "server",
+                "client"
+            ],
+            "availablePrompts": [
+                "plotDevelopment",
+                "dialogueWriting"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "plotDevelopment": {
+            "system": "You are a plot development assistant for book writing. Develop and refine plot points based on the given outline and character profiles.",
+            "user": "Please develop and refine the plot based on this outline and these character profiles: {outline}, {character_profiles}",
+            "requestFormat": {
+                "outline": "string",
+                "character_profiles": [
+                    "string"
+                ]
+            },
+            "responseFormat": {
+                "refined_plot": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "characterDevelopment"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "dialogueWriting": {
+            "system": "You are a dialogue writing assistant for book writing. Create natural and engaging dialogue between characters based on their profiles and the given scene description.",
+            "user": "Please write dialogue for the following scene and characters: {scene_description}, {character_profiles}",
+            "requestFormat": {
+                "scene_description": "string",
+                "character_profiles": [
+                    "string"
+                ]
+            },
+            "responseFormat": {
+                "dialogue": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "characterDevelopment"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "descriptionWriting": {
+            "system": "You are a description writing assistant for book writing. Create vivid and engaging descriptions of settings, characters, or events based on the given prompts.",
+            "user": "Please write a description for the following: {description_prompt}",
+            "requestFormat": {
+                "description_prompt": "string"
+            },
+            "responseFormat": {
+                "description": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "*"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "themeAnalysis": {
+            "system": "You are a theme analysis assistant for book writing. Analyze the given text and identify key themes and motifs.",
+            "user": "Please analyze the following text and identify its key themes and motifs: {text_to_analyze}",
+            "requestFormat": {
+                "text_to_analyze": "string"
+            },
+            "responseFormat": {
+                "themes": [
+                    "string"
+                ],
+                "motifs": [
+                    "string"
+                ]
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "*"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "paceAnalysis": {
+            "system": "You are a pace analysis assistant for book writing. Analyze the given text and provide feedback on its pacing.",
+            "user": "Please analyze the pacing of the following text: {text_to_analyze}",
+            "requestFormat": {
+                "text_to_analyze": "string"
+            },
+            "responseFormat": {
+                "pacing_analysis": "string",
+                "suggestions": [
+                    "string"
+                ]
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "*"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "marketResearch": {
+            "system": "You are a market research assistant for book writing. Analyze current market trends and provide insights for the given book concept or genre. Use the 'researchAndDevelopment' prompt for any necessary background research.",
+            "user": "Please provide market insights for a book with the following concept or genre: {book_concept_or_genre}",
+            "requestFormat": {
+                "book_concept_or_genre": "string"
+            },
+            "responseFormat": {
+                "market_insights": "string",
+                "recommendations": [
+                    "string"
+                ]
+            },
+            "context": [
+                "server",
+                "client"
+            ],
+            "availablePrompts": [
+                "researchAndDevelopment"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "synopsisWriting": {
+            "system": "You are a synopsis writing assistant for book writing. Create a compelling synopsis based on the given book outline or completed manuscript. You can use the 'textExtraction' prompt to extract key information from the text, 'summarization' to create concise summaries, and 'consolidation' to combine multiple summaries. Finally, use the 'finalPolish' prompt to refine the synopsis.",
+            "user": "Please write a synopsis for the following book: {book_outline_or_manuscript}",
+            "requestFormat": {
+                "book_outline_or_manuscript": "string"
+            },
+            "responseFormat": {
+                "synopsis": "string"
+            },
+            "context": [
+                "server",
+                "client"
+            ],
+            "availablePrompts": [
+                "textExtraction",
+                "summarization",
+                "consolidation",
+                "finalPolish"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        },
+        "writeBook": {
+            "system": "Your role is to manage the entire process of writing a book, from concept to final manuscript. You have access to a variety of specialized prompts that you can call to accomplish specific tasks. Your job is to execute these prompts in the correct order, manage their inputs and outputs, and guide the overall book writing process.\n\nHere is the sequence of steps you should follow, along with the prompts to use:\n\n1. Outline Creation: Use the 'outlineCreation' prompt to generate a detailed chapter-by-chapter outline.\n2. Character Development: For each main character, use the 'characterDevelopment' prompt to create detailed profiles.\n3. Plot Development: Use the 'plotDevelopment' prompt to refine the plot based on the outline and character profiles.\n4. Research and Development: Use the 'researchAndDevelopment' prompt for any necessary background research.\n5. Writing First Draft: This is an iterative process using multiple prompts:\n   a. Use 'dialogueWriting' for character interactions.\n   b. Use 'descriptionWriting' for setting and scene descriptions.\n   c. Use 'chunking' to divide the content into manageable sections.\n6. Revision and Rewriting: Use the 'revisionAndRewriting' prompt to identify areas needing improvement.\n7. Feedback Analysis: Use the 'feedbackAnalysis' prompt to process beta reader feedback.\n8. Polishing: Use the 'languagePolishing' prompt to refine the writing style.\n9. Final Proofreading: Use the 'finalProofreading' prompt to catch any remaining errors.\n10. Synopsis Writing: Use the 'synopsisWriting' prompt to create a compelling book summary.\n11. Market Research: Use the 'marketResearch' prompt to gather insights for marketing the book.\n\nThroughout the process, use the 'themeAnalysis' and 'paceAnalysis' prompts as needed to ensure consistency and engaging pacing.\n\nYour task is to execute this process, calling each prompt at the appropriate time and managing the flow of information between steps. Provide updates on the progress and ask for user input when necessary.",
+            "user": "Please begin the process of writing a book based on the following concept: {book_concept}",
+            "requestFormat": {
+                "book_concept": "string"
+            },
+            "responseFormat": {
+                "current_step": "string",
+                "progress_update": "string",
+                "next_action": "string",
+                "user_input_required": "boolean",
+                "user_prompt": "string"
+            },
+            "context": [
+                "server"
+            ],
+            "availablePrompts": [
+                "outlineCreation",
+                "characterDevelopment",
+                "plotDevelopment",
+                "researchAndDevelopment",
+                "dialogueWriting",
+                "descriptionWriting",
+                "chunking",
+                "revisionAndRewriting",
+                "feedbackAnalysis",
+                "languagePolishing",
+                "finalProofreading",
+                "synopsisWriting",
+                "marketResearch",
+                "themeAnalysis",
+                "paceAnalysis"
+            ],
+            "availableTools": [
+                "*"
+            ]
+        }
+    }
+]

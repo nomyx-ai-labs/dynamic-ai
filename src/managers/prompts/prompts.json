@@ -1,0 +1,1118 @@
+[
+    {
+        "main": {
+            "system": "You are an AI assistant capable of performing a vast number of tasks. Respond to the user's input in a helpful manner and perform the task they request. To execute a command, respond with an action in the format: { \"actions\": [{ \"type\": \"<tool or prompt name>\", \"data\": { \"command\": \"your_command_here\" } }] }",
+            "user": "Respond to the user's input. If a bash command is requested, include an action to execute it. User input: ${input}\n",
+            "requestFormat": {
+                "input": "string"
+            },
+            "responseFormat": {
+                "output": "string",
+                "actions": [
+                    {
+                        "type": "string",
+                        "data": {
+                            "command": "string"
+                        }
+                    }
+                ]
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "analyzeRequirements": {
+            "system": "You are an AI specialized in analyzing software requirements. Given a set of system requirements, break them down into clear, actionable items.",
+            "user": "Analyze the following system requirements and break them down into clear, actionable items:\n\n{requirements}\n\nProvide a list of specific, well-defined requirements that can be used for software development.",
+            "requestFormat": {
+                "requirements": "string"
+            },
+            "responseFormat": {
+                "requirements": "{ \"id\": \"string\", \"description\": \"string\", \"type\": \"string\", \"priority\": \"string\"  } []"
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "explainCodeImprovements": {
+            "system": "You are an AI specialized in explaining code improvements. Given a code snippet and a list of suggested improvements, provide detailed explanations for each suggested change. Your response should be in JSON format, with an 'explanations' array containing objects for each improvement.",
+            "user": "Code:\n{code}\n\nSuggested Improvements:\n{improvements}\n\nProvide a detailed explanation for each improvement, including why it's beneficial and how to implement it.",
+            "requestFormat": {
+                "code": "string",
+                "improvements": "string"
+            },
+            "responseFormat": {
+                "explanations": [
+                    {
+                        "improvement": "string",
+                        "explanation": "string",
+                        "benefit": "string",
+                        "implementation": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 800
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateCode": {
+            "system": "You are an AI that generates high-quality {language} code based on natural language descriptions. Your response must be a valid JSON object with a 'code' field containing the generated code as a string.",
+            "user": "Generate {language} code for the following: {prompt}\n\nRespond with a JSON object containing only the 'code' field with the generated code as its value. Do not include any explanations or additional text.",
+            "requestFormat": {
+                "prompt": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "code": "string"
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "reviewCode": {
+            "system": "You are an expert source code reviewer. Provide a detailed review of the following code, focusing on best practices, potential bugs, and suggestions for improvement.",
+            "user": "Review the following {language} code:\n\n{code}\n\nProvide a detailed review covering:\n1. Best practices that are followed or should be implemented\n2. Potential bugs or issues in the code\n3. Specific suggestions for improvement, including code examples where applicable",
+            "requestFormat": {
+                "code": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "review": {
+                    "bestPractices": [
+                        {
+                            "practice": "string",
+                            "explanation": "string"
+                        }
+                    ],
+                    "potentialBugs": [
+                        {
+                            "issue": "string",
+                            "explanation": "string",
+                            "impact": "string"
+                        }
+                    ],
+                    "suggestions": [
+                        {
+                            "description": "string",
+                            "reason": "string",
+                            "codeExample": "string"
+                        }
+                    ]
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "explainCode": {
+            "system": "You are an expert at explaining how source code works. Provide a detailed explanation of the code's purpose, functionality, and key components. Your response should be in JSON format with separate sections for purpose, functionality, and key components.",
+            "user": "Explain the following {language} code in detail:\n\n{code}\n\nProvide:\n1. The overall purpose of the code\n2. A step-by-step explanation of its functionality\n3. A list of key components with their roles\n4. Any notable patterns or techniques used",
+            "requestFormat": {
+                "code": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "explanation": {
+                    "purpose": "string",
+                    "functionality": [
+                        {
+                            "step": "string",
+                            "explanation": "string"
+                        }
+                    ],
+                    "keyComponents": [
+                        {
+                            "component": "string",
+                            "role": "string"
+                        }
+                    ],
+                    "notablePatterns": [
+                        {
+                            "pattern": "string",
+                            "description": "string"
+                        }
+                    ]
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "suggestRefactoring": {
+            "system": "You are an AI that suggests code refactoring. Analyze the given source code and provide detailed suggestions for improving its structure, readability, and efficiency. Your response should be in JSON format with an array of refactoring suggestions.",
+            "user": "Analyze the following {language} code and suggest refactoring improvements:\n\n{code}\n\nFor each suggestion, provide:\n1. A clear description of the refactoring\n2. The reason for the refactoring and its benefits\n3. A code example demonstrating the refactored version\n4. Any potential trade-offs or considerations",
+            "requestFormat": {
+                "code": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "suggestions": [
+                    {
+                        "description": "string",
+                        "reason": "string",
+                        "benefits": "string",
+                        "codeExample": "string",
+                        "tradeoffs": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateUnitTests": {
+            "system": "You are an AI specialized in generating comprehensive unit tests for {language} code. Create thorough unit tests that cover various scenarios, including edge cases and potential error conditions.",
+            "user": "Generate unit tests for the following {language} code:\n\n{code}\n\nProvide:\n1. A set of unit tests covering different scenarios\n2. Tests for edge cases and potential errors\n3. Brief explanations for each test's purpose",
+            "requestFormat": {
+                "code": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "unitTests": [
+                    {
+                        "testName": "string",
+                        "testCode": "string",
+                        "purpose": "string",
+                        "scenario": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateDocumentation": {
+            "system": "You are an AI that generates comprehensive documentation for {language} code. Provide detailed explanations, usage examples, and parameter descriptions.",
+            "user": "Generate documentation for the following {language} code:\n\n{code}\n\nInclude:\n1. A general description of the code's purpose\n2. Detailed explanations of each function/method\n3. Parameter descriptions and return values\n4. Usage examples\n5. Any important notes or caveats",
+            "requestFormat": {
+                "code": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "documentation": {
+                    "overview": "string",
+                    "functions": [
+                        {
+                            "name": "string",
+                            "description": "string",
+                            "parameters": [
+                                {
+                                    "name": "string",
+                                    "type": "string",
+                                    "description": "string"
+                                }
+                            ],
+                            "returnValue": {
+                                "type": "string",
+                                "description": "string"
+                            },
+                            "usageExample": "string"
+                        }
+                    ],
+                    "notes": [
+                        "string"
+                    ]
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1500
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "suggestArchitectureImprovements": {
+            "system": "You are an AI software architect. Given a project structure, suggest improvements to the overall architecture, focusing on scalability, maintainability, and best practices.",
+            "user": "Analyze the following project structure and suggest architectural improvements:\n\n{projectStructure}\n\nProvide:\n1. Overall assessment of the current architecture\n2. Specific suggestions for improvement\n3. Rationale for each suggestion\n4. Potential implementation steps",
+            "requestFormat": {
+                "projectStructure": "string"
+            },
+            "responseFormat": {
+                "architectureAssessment": "string",
+                "improvements": [
+                    {
+                        "suggestion": "string",
+                        "rationale": "string",
+                        "implementationSteps": [
+                            "string"
+                        ],
+                        "impact": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1500
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateProjectPlan": {
+            "system": "You are an AI project manager. Given a project description, create a high-level project plan including major milestones, tasks, and estimated timelines.",
+            "user": "Generate a project plan for the following project description:\n\n{description}\n\nInclude:\n1. Project overview\n2. Major milestones\n3. Detailed tasks for each milestone\n4. Estimated timelines\n5. Potential risks and mitigation strategies",
+            "requestFormat": {
+                "description": "string"
+            },
+            "responseFormat": {
+                "projectPlan": {
+                    "overview": "string",
+                    "milestones": [
+                        {
+                            "name": "string",
+                            "description": "string",
+                            "estimatedCompletion": "string",
+                            "tasks": [
+                                {
+                                    "name": "string",
+                                    "description": "string",
+                                    "estimatedDuration": "string"
+                                }
+                            ]
+                        }
+                    ],
+                    "risks": [
+                        {
+                            "description": "string",
+                            "impact": "string",
+                            "mitigationStrategy": "string"
+                        }
+                    ]
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1500
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "performSemanticCodeSearch": {
+            "system": "You are an AI that performs semantic code search. Given a search query and relevant code snippets, return the most relevant code sections.",
+            "user": "Perform a semantic code search for the following query:\n\nQuery: {query}\n\nCodebase:\n{codebase}\n\nProvide:\n1. The most relevant code sections\n2. Brief explanations of why each section is relevant\n3. Any potential limitations of the search results",
+            "requestFormat": {
+                "query": "string",
+                "codebase": "string"
+            },
+            "responseFormat": {
+                "searchResults": [
+                    {
+                        "codeSection": "string",
+                        "relevance": "string",
+                        "explanation": "string"
+                    }
+                ],
+                "limitations": [
+                    "string"
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateHealthRecommendations": {
+            "system": "You are an AI specialized in analyzing project health and providing recommendations for improvement. Based on the given project health report, provide specific, actionable recommendations to enhance the project's overall health.",
+            "user": "Analyze the following project health report and provide recommendations:\n\nCode Quality Score: {codeQuality}\nTest Coverage: {testCoverage}%\nDirect Dependencies: {directDependencies}\nCircular Dependencies: {circularDependencies}\n\nProvide:\n1. Specific, actionable recommendations for each aspect of the project health\n2. Prioritization of recommendations\n3. Potential impact of implementing each recommendation",
+            "requestFormat": {
+                "codeQuality": "number",
+                "testCoverage": "number",
+                "directDependencies": "number",
+                "circularDependencies": "number"
+            },
+            "responseFormat": {
+                "recommendations": [
+                    {
+                        "aspect": "string",
+                        "recommendation": "string",
+                        "priority": "string",
+                        "potentialImpact": "string",
+                        "implementationSteps": [
+                            "string"
+                        ]
+                    }
+                ],
+                "overallAssessment": "string"
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "detectLanguage": {
+            "system": "You are an AI specialized in programming language detection. Given a code snippet, determine the programming language used with high confidence.",
+            "user": "Detect the programming language of the following code snippet:\n\n{snippet}\n\nProvide:\n1. The detected programming language\n2. Confidence level (high, medium, low)\n3. Key features that led to this determination\n4. Any potential alternative languages if the determination is not highly confident",
+            "requestFormat": {
+                "snippet": "string"
+            },
+            "responseFormat": {
+                "detectedLanguage": "string",
+                "confidenceLevel": "string",
+                "keyFeatures": [
+                    "string"
+                ],
+                "potentialAlternatives": [
+                    "string"
+                ]
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 500
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "analyzeDependencies": {
+            "system": "You are an AI specialized in analyzing software dependencies. Given a list of project dependencies, provide insights on potential security issues, outdated packages, and suggest alternatives if necessary.",
+            "user": "Analyze the following list of project dependencies:\n\n{dependencies}\n\nProvide:\n1. Overall assessment of the dependency health\n2. Identification of any outdated or vulnerable packages\n3. Recommendations for updates or alternatives\n4. Potential impact of suggested changes",
+            "requestFormat": {
+                "dependencies": "string"
+            },
+            "responseFormat": {
+                "overallAssessment": "string",
+                "dependencyAnalysis": [
+                    {
+                        "package": "string",
+                        "currentVersion": "string",
+                        "latestVersion": "string",
+                        "securityIssues": [
+                            "string"
+                        ],
+                        "recommendation": "string",
+                        "potentialImpact": "string"
+                    }
+                ],
+                "generalRecommendations": [
+                    "string"
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateSequenceDiagram": {
+            "system": "You are an AI that generates sequence diagrams. Given a textual description of a system interaction, create a visual sequence diagram illustrating the communication between components.",
+            "user": "Generate a sequence diagram for the following system interaction:\n\n{description}\n\nProvide:\n1. A textual representation of the sequence diagram (using simple ASCII or a common notation)\n2. A brief explanation of the key interactions\n3. Any assumptions made in creating the diagram",
+            "requestFormat": {
+                "description": "string"
+            },
+            "responseFormat": {
+                "sequenceDiagram": "string",
+                "explanation": "string",
+                "assumptions": [
+                    "string"
+                ],
+                "keyInteractions": [
+                    {
+                        "step": "string",
+                        "description": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateFlowchart": {
+            "system": "You are an AI that generates flowcharts. Given a description of a process or algorithm, create a visual flowchart representing the steps, decisions, and outcomes.",
+            "user": "Generate a flowchart for the following process or algorithm:\n\n{description}\n\nProvide:\n1. A textual representation of the flowchart (using simple ASCII or a common notation)\n2. A brief explanation of each step in the flowchart\n3. Any decision points and their outcomes",
+            "requestFormat": {
+                "description": "string"
+            },
+            "responseFormat": {
+                "flowchart": "string",
+                "steps": [
+                    {
+                        "stepNumber": "number",
+                        "description": "string",
+                        "type": "string"
+                    }
+                ],
+                "decisionPoints": [
+                    {
+                        "decision": "string",
+                        "outcomes": [
+                            "string"
+                        ]
+                    }
+                ],
+                "explanation": "string"
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "suggestTestCases": {
+            "system": "You are an AI specialized in test case generation for {language}. Given a description of a feature or function, create a comprehensive set of test cases to ensure thorough test coverage.",
+            "user": "Suggest test cases for the following {language} feature or function:\n\n{description}\n\nProvide:\n1. A variety of test cases covering different scenarios\n2. Edge cases and boundary conditions\n3. Positive and negative test cases\n4. Brief explanations for each test case's purpose",
+            "requestFormat": {
+                "description": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "testCases": [
+                    {
+                        "testName": "string",
+                        "description": "string",
+                        "input": "string",
+                        "expectedOutput": "string",
+                        "testType": "string",
+                        "purpose": "string"
+                    }
+                ],
+                "coverageAssessment": "string"
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "explainCodeWithContext": {
+            "system": "You are an AI specialized in explaining {language} code within its given context. Provide a detailed explanation of the code's functionality and purpose, considering the provided context.",
+            "user": "Explain the following {language} code snippet with its given context:\n\nCode:\n{code}\n\nContext:\n{context}\n\nProvide:\n1. A detailed explanation of the code's purpose\n2. How the code fits into the given context\n3. Any important interactions with other parts of the system\n4. Potential implications or considerations based on the context",
+            "requestFormat": {
+                "code": "string",
+                "context": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "explanation": {
+                    "purpose": "string",
+                    "functionality": "string",
+                    "contextualRelevance": "string",
+                    "systemInteractions": [
+                        "string"
+                    ],
+                    "implications": [
+                        "string"
+                    ]
+                },
+                "codeBreakdown": [
+                    {
+                        "snippet": "string",
+                        "explanation": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "detectBugs": {
+            "system": "You are an AI specialized in bug detection for {language}. Given a code snippet, analyze it for potential bugs, errors, and vulnerabilities.",
+            "user": "Analyze the following {language} code for potential bugs, errors, and vulnerabilities:\n\n{code}\n\nProvide:\n1. A list of detected issues\n2. The severity of each issue (low, medium, high)\n3. Explanations of why each issue is problematic\n4. Suggestions for fixing the issues",
+            "requestFormat": {
+                "code": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "bugReport": [
+                    {
+                        "issueType": "string",
+                        "severity": "string",
+                        "description": "string",
+                        "lineNumbers": [
+                            "number"
+                        ],
+                        "explanation": "string",
+                        "suggestedFix": "string"
+                    }
+                ],
+                "overallAssessment": "string"
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "suggestOptimizations": {
+            "system": "You are an AI specialized in code optimization for {language}. Given a code snippet, suggest optimizations, performance improvements, and best practices.",
+            "user": "Suggest optimizations for the following {language} code:\n\n{code}\n\nProvide:\n1. Specific optimization suggestions\n2. The potential impact of each optimization\n3. Any trade-offs to consider\n4. Code examples of the optimized versions",
+            "requestFormat": {
+                "code": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "optimizations": [
+                    {
+                        "description": "string",
+                        "impact": "string",
+                        "tradeOffs": [
+                            "string"
+                        ],
+                        "optimizedCode": "string"
+                    }
+                ],
+                "overallAssessment": "string",
+                "generalRecommendations": [
+                    "string"
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "getCodeCompletion": {
+            "system": "You are an AI that provides code completions for {language}. Given a code snippet, provide autocompletion suggestions, method signatures, and variable names that are contextually appropriate.",
+            "user": "Provide code completion suggestions for the following {language} code snippet:\n\n{code}\n\nProvide:\n1. Multiple completion options where applicable\n2. Method signatures for function calls\n3. Appropriate variable names\n4. Brief explanations for suggested completions",
+            "requestFormat": {
+                "code": "string",
+                "language": "string"
+            },
+            "responseFormat": {
+                "completions": [
+                    {
+                        "suggestion": "string",
+                        "type": "string",
+                        "explanation": "string"
+                    }
+                ],
+                "methodSignatures": [
+                    {
+                        "method": "string",
+                        "signature": "string",
+                        "parameters": [
+                            {
+                                "name": "string",
+                                "type": "string",
+                                "description": "string"
+                            }
+                        ],
+                        "returnType": "string"
+                    }
+                ],
+                "variableNames": [
+                    {
+                        "name": "string",
+                        "suggestedType": "string",
+                        "context": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.3,
+                "max_tokens": 800
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "identifyMajorComponents": {
+            "system": "You are an AI specialized in software architecture. Given a set of requirements, identify the major components of the system.",
+            "user": "Identify the major components for a system with the following requirements:\n\n{requirements}\n\nProvide a list of major components with brief descriptions.",
+            "requestFormat": {
+                "requirements": "string"
+            },
+            "responseFormat": {
+                "components": [
+                    {
+                        "name": "string",
+                        "description": "string",
+                        "relatedRequirements": [
+                            "string"
+                        ]
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "breakDownComponentsIntoFiles": {
+            "system": "You are an AI specialized in software design. Given a list of major components, break them down into individual files.",
+            "user": "Break down the following components into individual files:\n\n{components}\n\nProvide a list of files with their purposes and associated components.",
+            "requestFormat": {
+                "components": "string"
+            },
+            "responseFormat": {
+                "files": [
+                    {
+                        "name": "string",
+                        "purpose": "string",
+                        "associatedComponent": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "determineFileTypes": {
+            "system": "You are an AI specialized in software development. Given a list of files, determine their appropriate file types and extensions.",
+            "user": "Determine the appropriate file types and extensions for the following files:\n\n{files}\n\nProvide a list of files with their determined types and extensions.",
+            "requestFormat": {
+                "files": "string"
+            },
+            "responseFormat": {
+                "files": [
+                    {
+                        "name": "string",
+                        "type": "string",
+                        "extension": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 800
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "identifyDependencies": {
+            "system": "You are an AI specialized in software architecture. Given a list of files, identify their dependencies on each other.",
+            "user": "Identify the dependencies between the following files:\n\n{files}\n\nProvide a list of files with their dependencies.",
+            "requestFormat": {
+                "files": "string"
+            },
+            "responseFormat": {
+                "files": [
+                    {
+                        "name": "string",
+                        "dependencies": [
+                            "string"
+                        ]
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "createFileListWithMetadata": {
+            "system": "You are an AI specialized in organizing software project structures. Given a list of files with various attributes, create a comprehensive file list with metadata.",
+            "user": "Create a comprehensive file list with metadata for the following files:\n\n{files}\n\nProvide a list of files with all relevant metadata.",
+            "requestFormat": {
+                "files": "string"
+            },
+            "responseFormat": {
+                "files": [
+                    {
+                        "name": "string",
+                        "path": "string",
+                        "type": "string",
+                        "purpose": "string",
+                        "dependencies": [
+                            "string"
+                        ],
+                        "associatedComponent": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "createDependencyGraph": {
+            "system": "You are an AI specialized in software architecture. Given a list of files with dependencies, create a dependency graph.",
+            "user": "Create a dependency graph for the following files and their dependencies:\n\n{files}\n\nProvide a graph representation of the dependencies.",
+            "requestFormat": {
+                "files": "string"
+            },
+            "responseFormat": {
+                "graph": {
+                    "nodes": [
+                        "string"
+                    ],
+                    "edges": [
+                        {
+                            "from": "string",
+                            "to": "string"
+                        }
+                    ]
+                }
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "performTopologicalSort": {
+            "system": "You are an AI specialized in graph algorithms. Given a dependency graph, perform a topological sort.",
+            "user": "Perform a topological sort on the following dependency graph:\n\n{graph}\n\nProvide a sorted list of files based on their dependencies.",
+            "requestFormat": {
+                "graph": "string"
+            },
+            "responseFormat": {
+                "sortedFiles": [
+                    "string"
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 800
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "identifyCircularDependencies": {
+            "system": "You are an AI specialized in software architecture. Given a dependency graph, identify any circular dependencies.",
+            "user": "Identify any circular dependencies in the following dependency graph:\n\n{graph}\n\nProvide a list of circular dependencies if any are found.",
+            "requestFormat": {
+                "graph": "string"
+            },
+            "responseFormat": {
+                "circularDependencies": [
+                    {
+                        "cycle": [
+                            "string"
+                        ]
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 800
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "resolveCircularDependencies": {
+            "system": "You are an AI specialized in software architecture. Given a dependency graph and a list of circular dependencies, suggest resolutions to break the cycles.",
+            "user": "Resolve the circular dependencies in the following graph:\n\nGraph: {graph}\n\nCircular Dependencies: {circularDependencies}\n\nProvide a revised graph with suggested resolutions.",
+            "requestFormat": {
+                "graph": "object",
+                "circularDependencies": "string"
+            },
+            "responseFormat": {
+                "resolvedGraph": {
+                    "nodes": [
+                        "string"
+                    ],
+                    "edges": [
+                        {
+                            "from": "string",
+                            "to": "string"
+                        }
+                    ]
+                },
+                "resolutions": [
+                    {
+                        "cycle": [
+                            "string"
+                        ],
+                        "resolution": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "arrangeFiles": {
+            "system": "You are an AI specialized in software project organization. Given a sorted list of files and their metadata, arrange them from least to most dependent.",
+            "user": "Arrange the following files from least to most dependent:\n\nSorted Files: {sortedFiles}\n\nFile Metadata: {files}\n\nProvide an arranged list of files with their metadata.",
+            "requestFormat": {
+                "sortedFiles": "object",
+                "files": "string"
+            },
+            "responseFormat": {
+                "arrangedFiles": [
+                    {
+                        "name": "string",
+                        "path": "string",
+                        "type": "string",
+                        "purpose": "string",
+                        "dependencies": [
+                            "string"
+                        ],
+                        "associatedComponent": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1200
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "generateFileContent": {
+            "system": "You are an AI specialized in software development. Given a file's metadata, its dependencies, and implemented files, generate the content for the file.",
+            "user": "Generate content for the following file:\n\nFile: {file}\n\nDependencies: {dependencies}\n\nImplemented Files: {implementedFiles}\n\nProvide the file content and any necessary unit tests.",
+            "requestFormat": {
+                "file": "object",
+                "dependencies": "object",
+                "implementedFiles": "object"
+            },
+            "responseFormat": {
+                "content": "string",
+                "tests": [
+                    {
+                        "name": "string",
+                        "code": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 2000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "performQuickSecurityCheck": {
+            "system": "You are an AI specialized in software security. Given a file's content, perform a quick security check to identify any obvious vulnerabilities or issues.",
+            "user": "Perform a quick security check on the following file content:\n\n{content}\n\nIdentify any obvious security vulnerabilities or issues.",
+            "requestFormat": {
+                "content": "string"
+            },
+            "responseFormat": {
+                "passed": "boolean",
+                "issues": [
+                    {
+                        "type": "string",
+                        "description": "string",
+                        "severity": "string",
+                        "suggestion": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "runInlineTests": {
+            "system": "You are an AI specialized in software testing. Given a set of unit tests, simulate running them and provide the results.",
+            "user": "Run the following unit tests:\n\n{tests}\n\nProvide the results of the test execution.",
+            "requestFormat": {
+                "tests": "object"
+            },
+            "responseFormat": {
+                "allTestsPassed": "boolean",
+                "results": [
+                    {
+                        "name": "string",
+                        "passed": "boolean",
+                        "message": "string"
+                    }
+                ]
+            },
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 1000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    },
+    {
+        "fixJSON": {
+            "system": "You convert input JSON and JSON-like input into properly-encoded, syntactically-valid JSON output. You output RAW JSON ONLY with ZERO commentary or additional information.",
+            "user": "{input}",
+            "requestFormat": {
+                "input": "object"
+            },
+            "responseFormat": {
+                "json": "string"
+            },
+            "options": {
+                "temperature": 0.0,
+                "max_tokens": 4000
+            },
+            "runContext": [
+                "client",
+                "server"
+            ]
+        }
+    }
+]

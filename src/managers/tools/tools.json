@@ -1,0 +1,477 @@
+{
+    "set_state": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "state": "object"
+            },
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "state = { ...state, ...params.state };\nreturn { result: 'State updated successfully' };",
+        "runContext": [
+            "server"
+        ]
+    },
+    "get_state": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "key": "string"
+            },
+            "output_schema": {
+                "result": "any",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "return { result: state[params.key] };",
+        "runContext": [
+            "server"
+        ]
+    },
+    "decide": {
+        "type": "prompt",
+        "schema": {
+            "output_schema": {
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "system": "Determine the next steps to take based on the current state and the work products generated so far.",
+        "user": "Given the state of the system, determine the next steps to take.",
+        "runContext": [
+            "server"
+        ]
+    },
+    "read": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "file": "string"
+            },
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const fs = require('fs').promises;\ntry {\n    state[state.current_task] = await fs.readFile(state.request.file, 'utf8');\n    state.files[state.request.file] = state[state.current_task];\n    return { result: state[state.current_task] };\n} catch (error) {\n    return { error: `Error reading file: ${error.message}` };\n}",
+        "runContext": [
+            "server"
+        ]
+    },
+    "write": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "file": "string",
+                "content": "string"
+            },
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const fse = require('fs-extra');\nconst path = require('path');\n\nreturn async function() {\n    try {\n        const filePath = path.resolve(params.file);\n        await fse.ensureDir(path.dirname(filePath));\n        await fse.writeFile(filePath, params.content);\n        return { result: 'File written successfully' };\n    } catch (error) {\n        throw new Error(`Error writing file: ${error.message}`);\n    }\n}();",
+        "runContext": [
+            "server"
+        ]
+    },
+    "npm": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "command": "string"
+            },
+            "output_schema": {
+                "stdout": "string",
+                "stderr": "string"
+            }
+        },
+        "script": "const { exec } = require('child_process');\nconst util = require('util');\nconst execPromise = util.promisify(exec);\ntry {\n    const { stdout, stderr } = await execPromise(`npm ${state.request.command}`);\n    return { stdout, stderr };\n} catch (error) {\n    return { error: `Error executing npm command: ${error.message}` };\n}",
+        "runContext": [
+            "server"
+        ]
+    },
+    "call_llm": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "messages": "array<{ role: string, content: string }>",
+                "options": "object"
+            },
+            "output_schema": {
+                "response": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const providers = {\n    anthropic: this.makeAnthropicRequest,\n    vertex: this.makeGeminiRequest,\n    openai: this.makeAzureOpenAIRequest\n};\n\nconst source = params.options.source || process.env.AI_PROVIDER;\nconst provider = providers[source] || providers.anthropic;\n\ntry {\n    const callProvider = async (messages) => {\n        const response = await provider.call(this, messages, params.options);\n        try {\n            const parsedResponse = response && typeof response === 'string' ? JSON.parse(jsonrepair(response)) : response;\n            if (parsedResponse.actions) {\n                for (const action of parsedResponse.actions) {\n                    messages.push({ role: 'assistant', content: JSON.stringify(action) });\n                    if (this.tools[action.type]) {\n                        const respo = await this.tools[action.type].exec(action.data);\n                        if (action.echo) {\n                            messages.push({ role: 'user', content: JSON.stringify(respo) });\n                            return callProvider(messages);\n                        }\n                    }\n                }\n            }\n            return parsedResponse;\n        } catch (error) {\n            console.error('Error parsing response:', error);\n            console.log('Raw response:', response);\n            return { error: 'Failed to parse response', rawResponse: response };\n        }\n    }\n    return callProvider(params.messages);\n} catch (error) {\n    console.error('Error in chat method:', error);\n    return { error: 'Failed to get response from AI provider' };\n}",
+        "runContext": [
+            "server"
+        ]
+    },
+    "chat": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "message": "string"
+            },
+            "output_schema": {
+                "response": "string"
+            }
+        },
+        "script": "console.log(params.message);\nreturn { response: params.message }"
+    },
+    "speak": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "text": "string",
+                "voice": "string"
+            },
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const PlayHT = require('playht');\nconst fs = require('fs');\nconst player = require('play-sound')({});\n\nPlayHT.init({ \n    apiKey: process.env.PLAYHT_AUTHORIZATION, \n    userId: process.env.PLAYHT_USER_ID \n});\n\nreturn new Promise(async (resolve) => {\n    try {\n        PlayHT.stream(params.text, {\n            voiceEngine: 'PlayHT2.0-turbo',\n            voiceId: params.voice === 'male' ? process.env.PLAYHT_MALE_VOICE : process.env.PLAYHT_FEMALE_VOICE,\n        }).then(stream => {\n            const chunks = [];\n            stream.on('data', (chunk) => chunks.push(chunk));\n            stream.on('end', () => {\n                const filename = `${Math.random().toString(36).slice(2)}.mp3`;\n                fs.writeFileSync(filename, Buffer.concat(chunks));\n                player.play(filename, () => {\n                    fs.unlinkSync(filename);\n                    resolve({ result: `(aloud) ${params.text}` });\n                });\n            });\n        });\n\n    } catch (error) {\n        resolve({ error: `Error in speak action: ${error.message}` });\n    }\n});",
+        "runContext": [
+            "server"
+        ]
+    },
+    "executeCommand": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "command": "string"
+            },
+            "output_schema": {
+                "stdout": "string",
+                "stderr": "string",
+                "error": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { spawnSync } = require('child_process');\ntry {\n    const result = spawnSync(params.command, { shell: true });\n    return result.stdout.toString();\n} catch (error) {\n    console.error('Unexpected error in bash command:', error);\n    return JSON.stringify({ \n        error: `Unexpected error: ${error.message}`,\n        stack: error.stack\n    });\n}",
+        "runContext": [
+            "server"
+        ]
+    },
+    "eval": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "code": "string"
+            },
+            "output_schema": {
+                "result": "any",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "try {\n    const result = eval(params.code);\n    return { result: result };\n} catch (error) {\n    console.error(`Error in eval: ${error.message}`);\n    return { error: `Error in eval: ${error.message}` };\n}",
+        "runContext": [
+            "server"
+        ]
+    },
+    "respond": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "request": "object"
+            },
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "try {\n    return params ;\n} catch (error) {\n    console.error(`Error in chat: ${error.message}`);\n    return { error: `Error in chat: ${error.message}` };\n}",
+        "runContext": [
+            "client"
+        ]
+    },
+    "list_tools": {
+        "type": "tool",
+        "schema": {
+            "output_schema": {
+                "result": "array<string>",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "return Object.keys(this.tools);",
+        "runContext": [
+            "server"
+        ]
+    },
+    "list_prompts": {
+        "type": "tool",
+        "schema": {
+            "output_schema": {
+                "result": "array<string>",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "return Object.keys(this.prompts);",
+        "runContext": [
+            "server"
+        ]
+    },
+    "create_artifact": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "path": "string",
+                "language": "string",
+                "initialContent": "string?"
+            },
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { path, language, initialContent } = params; const artifactId = await context.aiArtifactTools.create_artifact.exec(path, language, initialContent || ''); return { result: artifactId };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "update_artifact": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string",
+                "newContent": "string"
+            },
+            "output_schema": {
+                "result": "boolean",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId, newContent } = params; const result = await context.aiArtifactTools.updateArtifact(artifactId, newContent); return { result };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "delete_artifact": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string"
+            },
+            "output_schema": {
+                "result": "boolean",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId } = params; const result = await context.aiArtifactTools.deleteArtifact(artifactId); return { result };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "list_artifacts": {
+        "type": "tool",
+        "schema": {
+            "output_schema": {
+                "result": "array<{ id: string, path: string, language: string, currentVersion: number, versionCount: number }>",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const artifacts = context.aiArtifactTools.getClientState().artifacts; return { result: artifacts };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "get_artifact_content": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string"
+            },
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId } = params; const content = await context.aiArtifactTools.artifactManager.artifacts.get(artifactId).getCurrentVersionContent(); return { result: content };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "create_new_version": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string"
+            },
+            "output_schema": {
+                "result": "number",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId } = params; const version = await context.aiArtifactTools.createNewVersion(artifactId); return { result: version.number };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "switch_version": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string",
+                "versionNumber": "number"
+            },
+            "output_schema": {
+                "result": "boolean",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId, versionNumber } = params; const result = await context.aiArtifactTools.switchToVersion(artifactId, versionNumber); return { result };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "format_code": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string"
+            },
+            "output_schema": {
+                "result": "boolean",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId } = params; const result = await context.aiArtifactTools.formatCode(artifactId); return { result };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "search_in_artifact": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string",
+                "searchTerm": "string"
+            },
+            "output_schema": {
+                "result": "array<{ lineNumber: number, content: string }>",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId, searchTerm } = params; const results = await context.aiArtifactTools.searchInArtifact(artifactId, searchTerm); return { result: results };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "save_artifact_to_file": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string"
+            },
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId } = params; const filePath = await context.aiArtifactTools.saveArtifactToFile(artifactId); return { result: filePath };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "load_artifact_from_file": {
+        "type": "tool",
+        "schema": {
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const artifactId = await context.aiArtifactTools.loadArtifactFromFile(); return { result: artifactId };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "render_artifact": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string"
+            },
+            "output_schema": {
+                "result": "boolean",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId } = params; const result = await context.aiArtifactTools.renderArtifact(artifactId); return { result };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "request_user_input": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "prompt": "string",
+                "options": "object?"
+            },
+            "output_schema": {
+                "result": "string",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { prompt, options } = params; const result = await context.aiArtifactTools.requestUserInput(prompt, options); return { result };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "notify_user": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "message": "string",
+                "type": "string"
+            },
+            "output_schema": {
+                "result": "boolean",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { message, type } = params; context.aiArtifactTools.uiManager['notify' + type.charAt(0).toUpperCase() + type.slice(1)](message); return { result: true };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "switch_to_version": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "artifactId": "string",
+                "versionNumber": "number"
+            },
+            "output_schema": {
+                "result": "boolean",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { artifactId, versionNumber } = params; const result = await context.aiArtifactTools.switchToVersion(artifactId, versionNumber); return { result };",
+        "runContext": [
+            "client"
+        ]
+    },
+    "confirm_action": {
+        "type": "tool",
+        "schema": {
+            "input_schema": {
+                "message": "string",
+                "options": "object?"
+            },
+            "output_schema": {
+                "result": "boolean",
+                "actions": "array<{ type: string, command?: string, system?: string, user?: string, resultFormat?: string, request?: any }>"
+            }
+        },
+        "script": "const { message, options } = params; const result = await context.aiArtifactTools.confirmAction(message, options); return { result };",
+        "runContext": [
+            "client"
+        ]
+    }
+}
